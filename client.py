@@ -12,7 +12,6 @@ class ProgressBarMonitorApp:
         self.root.title("Avisador 3000!")
         self.root.geometry("350x250")
 
-        # Set Icon
         script_dir = os.path.dirname(os.path.abspath(__file__))
         icon_path = os.path.join(script_dir, 'icon.ico')
         if os.path.exists(icon_path):
@@ -88,14 +87,14 @@ class ProgressBarMonitorApp:
             start_color = img.getpixel((start_px_x, px_y))
             end_color = img.getpixel((end_px_x, px_y))
 
-            # Smart Initial State Detection
+            
             if not self.colors_are_similar(start_color, end_color):
-                # Case A: Bar is already in progress. We know both colors.
+                # Case A: Barra en progreso
                 fill_color, bg_color = start_color, end_color
                 self.status_label.config(text="Estado detectado: En progreso. Esperando a que termine...")
                 self.wait_for_completion(fill_color, end_px_x, px_y, target_ip)
             else:
-                # Case B: Bar is empty or full. Assume empty and wait for start.
+                # Case B: Barra vacia o llena.
                 bg_color = start_color
                 self.status_label.config(text="Estado detectado: Vacío. Esperando a comenzar...")
                 fill_color = self.wait_for_start(bg_color, start_px_x, px_y)
@@ -112,8 +111,8 @@ class ProgressBarMonitorApp:
         while self.is_monitoring:
             current_color = ImageGrab.grab(bbox=self.bbox).getpixel((x, y))
             if not self.colors_are_similar(current_color, bg_color):
-                return current_color # Return the newly found fill color
-            time.sleep(0.2) # Check more frequently for the start
+                return current_color
+            time.sleep(0.2)
         return None
 
     def wait_for_completion(self, fill_color, x, y, target_ip):
@@ -123,7 +122,7 @@ class ProgressBarMonitorApp:
                 self.status_label.config(text="Progreso completado! Enviando señal...")
                 self.send_network_signal(target_ip)
                 break
-            time.sleep(0.5) # Can check less frequently for the end
+            time.sleep(0.5)
 
     def send_network_signal(self, target_ip):
         try:
